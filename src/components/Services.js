@@ -23,7 +23,7 @@ export default class Services extends Component {
         info: "Officia laborum irure reprehenderit et eu enim commodo.",
       },
       {
-        icon: <FaCocktail />,
+        icon: <FaBeer />,
         title: "Strongest Beer",
         info:
           "Amet labore minim voluptate ut dolore minim do fugiat ipsum non.",
