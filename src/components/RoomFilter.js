@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function RoomsFilter() {
+export default function RoomFilter() {
   return <div>Hello from roomsfilter</div>;
 }
