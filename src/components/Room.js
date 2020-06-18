@@ -15,7 +15,7 @@ export default function Room({ room }) {
           <p>per night</p>
         </div>
         <Link to={`/rooms/${slug}`} className="btn-primary room-link">
-          Featured
+          Features
         </Link>
       </div>
       <p className="room-info">{name}</p>
