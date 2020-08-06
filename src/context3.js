@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import items from "./data";
+// import Client from "./Contentful";
 
 const RoomContext = React.createContext();
-// <RoomContext.Provider value={}
-class RoomProvider extends Component {
+
+export default class RoomProvider extends Component {
   state = {
     rooms: [],
     sortedRooms: [],
     featuredRooms: [],
     loading: true,
+    //
     type: "all",
     capacity: 1,
     price: 0,
@@ -19,19 +21,46 @@ class RoomProvider extends Component {
     breakfast: false,
     pets: false,
   };
-  // getData
+
+  // getData = async () => {
+  //   try {
+  //     let response = await Client.getEntries({
+  //       content_type: "beachResortRoom"
+  //     });
+  //     let rooms = this.formatData(response.items);
+
+  //     let featuredRooms = rooms.filter(room => room.featured === true);
+  //     //
+  //     let maxPrice = Math.max(...rooms.map(item => item.price));
+  //     let maxSize = Math.max(...rooms.map(item => item.size));
+  //     this.setState({
+  //       rooms,
+  //       featuredRooms,
+  //       sortedRooms: rooms,
+  //       loading: false,
+  //       //
+  //       price: maxPrice,
+  //       maxPrice,
+  //       maxSize
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   componentDidMount() {
+    // this.getData();
     let rooms = this.formatData(items);
     let featuredRooms = rooms.filter((room) => room.featured === true);
+    //
     let maxPrice = Math.max(...rooms.map((item) => item.price));
     let maxSize = Math.max(...rooms.map((item) => item.size));
-
     this.setState({
       rooms,
       featuredRooms,
       sortedRooms: rooms,
       loading: false,
+      //
       price: maxPrice,
       maxPrice,
       maxSize,
@@ -43,22 +72,28 @@ class RoomProvider extends Component {
       let id = item.sys.id;
       let images = item.fields.images.map((image) => image.fields.file.url);
 
-      let room = { ...item.fields, id, images };
+      let room = { ...item.fields, images, id };
       return room;
     });
     return tempItems;
   }
-
   getRoom = (slug) => {
     let tempRooms = [...this.state.rooms];
     const room = tempRooms.find((room) => room.slug === slug);
     return room;
   };
   handleChange = (event) => {
-    const type = event.target.type;
-    const name = event.target.name;
-    const value = event.target.value;
-    console.log(type, name, value);
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    console.log(name, value);
+
+    this.setState(
+      {
+        [name]: value,
+      },
+      this.filterRooms
+    );
   };
   filterRooms = () => {
     let {
@@ -103,7 +138,6 @@ class RoomProvider extends Component {
       sortedRooms: tempRooms,
     });
   };
-
   render() {
     return (
       <RoomContext.Provider
@@ -118,8 +152,9 @@ class RoomProvider extends Component {
     );
   }
 }
-
 const RoomConsumer = RoomContext.Consumer;
+
+export { RoomProvider, RoomConsumer, RoomContext };
 
 export function withRoomConsumer(Component) {
   return function ConsumerWrapper(props) {
@@ -130,5 +165,3 @@ export function withRoomConsumer(Component) {
     );
   };
 }
-
-export { RoomConsumer, RoomProvider, RoomContext };
